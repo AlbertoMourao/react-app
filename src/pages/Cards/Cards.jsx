@@ -1,13 +1,15 @@
-import { useContext } from "react";
+import { useSelector } from "react-redux";
 import { Card } from "../../components";
-import { CardsListContext } from "../../contexts";
 
 export function Cards () {
-    const { cardsList } = useContext(CardsListContext);
+    const cardsList = useSelector(state => state.cards.value);
+    console.log(cardsList)
 
     return (
         <section className="d-flex flex-wrap">
-            {cardsList.map(({ title, text, btnText }, index) => <Card key={`card-${index}`} title={title} text={text} btnText={btnText} />)}
+            {cardsList.map(({ title, text, btnText }, index) => {
+                return <Card key={`card-${index}`} title={title} text={text} btnText={btnText} />
+            })}
         </section>
     );
 }

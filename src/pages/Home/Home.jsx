@@ -1,29 +1,33 @@
-import { useContext } from "react";
+import { useCallback, useContext } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { CardForm } from "../../components";
-import { CardsListContext, LoadingContext } from "../../contexts";
+import { LoadingContext } from "../../contexts";
+import { create } from "../../store/modules/cardsSlice";
 
 export function Home() {
     const { setLoading } = useContext(LoadingContext);
-    const { cardsList, setCardsList } = useContext(CardsListContext);
+    const dispatch = useDispatch();
+    const cards = useSelector(state => state.cards.value);
 
+    const createCard = useCallback((card) => {
+        dispatch(create(card));
+    }, [dispatch]);
+    
     return (
         <>
             <div style={{ marginBottom: '20px' }}>
                 <CardForm onSubmit={({ text, title, btnText }) => {
-                    setCardsList([
-                        ...cardsList,
-                        {
-                            text,
-                            title,
-                            btnText,
-                        }
-                    ]);
+                    createCard({
+                        text,
+                        title,
+                        btnText,
+                    });
 
                     setTimeout(() => {
                         setLoading(false);
                     }, 2000);
-
                 }} />
+                <p>Total de cards: {cards.length}</p>
             </div>
         </>
     );
